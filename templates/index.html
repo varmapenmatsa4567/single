@@ -16,6 +16,7 @@
                         data: {'data': title},
                         success: function(resp){
                             document.getElementById("container").innerHTML = resp.data;
+                            document.getElementById("title").value = "";
                             document.getElementById("title").focus();
                         },
                         error: function(error){
@@ -32,7 +33,6 @@
                     data: {'data': id},
                     success: function(resp){
                         document.getElementById("container").innerHTML = resp.data;
-                        document.getElementById("title").focus();
                     },
                     error: function(error){
                         console.log(error);
@@ -46,7 +46,6 @@
                     data: {'data': id},
                     success: function(resp){
                         document.getElementById("container").innerHTML = resp.data;
-                        document.getElementById("title").focus();
                     },
                     error: function(error){
                         console.log(error);
