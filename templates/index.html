@@ -1,6 +1,5 @@
 <html>
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
         <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
@@ -32,6 +31,7 @@
                     data: {'data': id},
                     success: function(resp){
                         document.getElementById("container").innerHTML = resp.data;
+                        document.getElementById("title").focus();
                     },
                     error: function(error){
                         console.log(error);
@@ -45,6 +45,7 @@
                     data: {'data': id},
                     success: function(resp){
                         document.getElementById("container").innerHTML = resp.data;
+                        document.getElementById("title").focus();
                     },
                     error: function(error){
                         console.log(error);
@@ -52,7 +53,28 @@
                 });
             }
         </script>
-        <div class="ui container" style="margin-top: 50px;" id="container">
+        <script>
+            var a = "";
+            function load(){
+                setInterval(function(){
+                    $.ajax({
+                        url: "/reload",
+                        type: "POST",
+                        success: function(resp){
+                            if(a!=resp.data){
+                                document.getElementById("container").innerHTML = resp.data;
+                            }
+                            a = resp.data;
+                        },
+                        error: function(error){
+                            console.log(error);
+                        }
+                    });
+                },1000);
+            }
+            load();
+        </script>
+        <div class="ui container" style="margin-top: 50px;">
             <h1 class="ui center aligned header">Todo List</h1>
             <div class="ui form">
                 <div class="field">
@@ -62,7 +84,8 @@
                     <input type="button" value="Add" class="ui blue button" onclick="add()">
                 </div>
             </div>
-    
+        </div>
+        <div class="ui container" style="margin-top: 10px;" id="container">
             {% if todo_list %}
                 {% for todo in todo_list %}
                 <div class="ui segment">
@@ -83,7 +106,6 @@
                     <p class="ui center aligned big header">Todo List is empty</p>
                 </div>
             {% endif %}
-            
         </div>
         
     </body>
