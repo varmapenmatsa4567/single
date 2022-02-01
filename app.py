@@ -17,6 +17,11 @@ def home():
     todos = Todo.query.all()
     return render_template("index.html",todo_list = todos)
 
+@app.route("/reload",methods=['POST'])
+def reload():
+    todos = Todo.query.all()
+    return jsonify({'data': render_template("content.html",todo_list=todos)})
+
 @app.route("/add",methods=['POST'])
 def add():
     title = request.form["data"]
