@@ -12,6 +12,16 @@ class Todo(db.Model):
     title = db.Column(db.String(100))
     complete = db.Column(db.Boolean)
 
+def getTodoList(status):
+    if(status=="0"):
+        todos = Todo.query.all()
+    elif(status=="1"):
+        todos = Todo.query.filter_by(complete=True).all()
+    else:
+        todos = Todo.query.filter_by(complete=False).all()
+    return todos
+
+
 @app.route("/")
 def home():
     todos = Todo.query.all()
@@ -19,7 +29,13 @@ def home():
 
 @app.route("/reload",methods=['POST'])
 def reload():
-    todos = Todo.query.all()
+    status = request.form["status"]
+    if(status=="0"):
+        todos = Todo.query.all()
+    elif(status=="1"):
+        todos = Todo.query.filter_by(complete=True).all()
+    else:
+        todos = Todo.query.filter_by(complete=False).all()
     return jsonify({'data': render_template("content.html",todo_list=todos)})
 
 @app.route("/add",methods=['POST'])
@@ -28,8 +44,8 @@ def add():
     todo = Todo(title=title,complete=False)
     db.session.add(todo)
     db.session.commit()
-    todos = Todo.query.all()
-    print(todos)
+    status = request.form["status"]
+    todos = getTodoList(status)
     return jsonify({'data': render_template("content.html",todo_list=todos)})
 
 @app.route("/update",methods=['POST'])
@@ -38,8 +54,8 @@ def update():
     todo = Todo.query.filter_by(id=id).first()
     todo.complete = not todo.complete
     db.session.commit()
-    todos = Todo.query.all()
-    print(todos)
+    status = request.form["status"]
+    todos = getTodoList(status)
     return jsonify({'data': render_template("content.html",todo_list=todos)})
 
 @app.route("/delete",methods=['POST'])
@@ -48,8 +64,8 @@ def delete():
     todo = Todo.query.filter_by(id=id).first()
     db.session.delete(todo)
     db.session.commit()
-    todos = Todo.query.all()
-    print(todos)
+    status = request.form["status"]
+    todos = getTodoList(status)
     return jsonify({'data': render_template("content.html",todo_list=todos)})
 
 
