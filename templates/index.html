@@ -9,11 +9,12 @@
         <script>
             function add(){
                 var title = document.getElementById("title").value;
+                var st = document.getElementById("status").value;
                 if(title){
                     $.ajax({
                         url: "/add",
                         type: "POST",
-                        data: {'data': title},
+                        data: {'data': title,'status': st},
                         success: function(resp){
                             document.getElementById("container").innerHTML = resp.data;
                             document.getElementById("title").value = "";
@@ -26,10 +27,11 @@
                 
             }
             function update(id){
+                var st = document.getElementById("status").value;
                 $.ajax({
                     url: "/update",
                     type: "POST",
-                    data: {'data': id},
+                    data: {'data': id,'status': st},
                     success: function(resp){
                         document.getElementById("container").innerHTML = resp.data;
                     },
@@ -39,10 +41,11 @@
                 });
             }
             function delet(id){
+                var st = document.getElementById("status").value;
                 $.ajax({
                     url: "/delete",
                     type: "POST",
-                    data: {'data': id},
+                    data: {'data': id,'status': st},
                     success: function(resp){
                         document.getElementById("container").innerHTML = resp.data;
                     },
@@ -56,9 +59,11 @@
             var a = "";
             function load(){
                 setInterval(function(){
+                    var st = document.getElementById("status").value;
                     $.ajax({
                         url: "/reload",
                         type: "POST",
+                        data: {'status': st},
                         success: function(resp){
                             if(a!=resp.data){
                                 document.getElementById("container").innerHTML = resp.data;
@@ -72,9 +77,34 @@
                 },1000);
             }
             load();
+            function changeStatus(){
+                    var st = document.getElementById("status").value;
+                    $.ajax({
+                        url: "/reload",
+                        type: "POST",
+                        data: {'status': st},
+                        success: function(resp){
+                            if(a!=resp.data){
+                                document.getElementById("container").innerHTML = resp.data;
+                            }
+                            a = resp.data;
+                        },
+                        error: function(error){
+                            console.log(error);
+                        }
+                    });
+            }
         </script>
         <div class="ui container" style="margin-top: 50px;">
             <h1 class="ui center aligned header">Todo List</h1>
+            <div class="ui container" style="display: flex;justify-content: right">
+                <select class="ui right aligned dropdown" id="status" onchange="changeStatus()">
+                    <option value="0">All</option>
+                    <option value="1">Completed</option>
+                    <option value="2">Not Completed</option>
+                </select>
+            </div>
+            
             <div class="ui form">
                 <div class="field">
                     <label for="title">Todo title</label>
