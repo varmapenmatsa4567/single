@@ -17,7 +17,6 @@
                         success: function(resp){
                             document.getElementById("container").innerHTML = resp.data;
                             document.getElementById("title").value = "";
-                            document.getElementById("title").focus();
                         },
                         error: function(error){
                             console.log(error);
